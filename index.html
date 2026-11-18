@@ -158,7 +158,10 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .ptip:after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fff}
 .ptip-h{color:#6b6c83;line-height:16px}
 .ptip-l{display:flex;flex-direction:column;gap:8px}
-.ptip-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-radius:24px;background:#fafafb}
+.ptip-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-radius:24px;background:#fafafb;cursor:pointer;transition:background .15s}
+.ptip-r:hover{background:#f4f0f7}
+.ptip-r .go{width:16px;height:16px;margin-left:-4px;color:#872ab0;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .2s}
+.ptip-r:hover .go{opacity:1;transform:none}
 .ptip-a{display:flex;align-items:center;gap:8px}
 .ptip-p{display:flex;align-items:center;gap:8px}
 .ptip-ics{display:flex;align-items:center;height:24px}
@@ -650,9 +653,10 @@ document.getElementById('q').addEventListener('input',render);
 })();
 document.getElementById('hideSmall').addEventListener('change',render);
 (function(){var tip=document.createElement('div');tip.className='ptip';document.body.appendChild(tip);var cur=null,t=null;
+  var GO='<svg class="go" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function show(el){clearTimeout(t);if(el===cur)return;var sym=el.dataset.sym,d=POOLS[sym];if(!d)return;var rows=d.slice(0,-1);
     tip.innerHTML='<div class="ptip-h">'+sym+' in '+rows.length+(rows.length===1?' pool':' pools')+'</div><div class="ptip-l">'+rows.map(function(x){
-      return '<div class="ptip-r"><div class="ptip-p"><span class="ptip-ics">'+icHtml(sym,'tp-ic')+icHtml(x[0],'tp-ic')+'</span>'+sym+'/'+x[0]+'</div><div class="ptip-a">'+x[1]+' '+sym+'</div></div>';}).join('')+
+      return '<div class="ptip-r"><div class="ptip-p"><span class="ptip-ics">'+icHtml(sym,'tp-ic')+icHtml(x[0],'tp-ic')+'</span>'+sym+'/'+x[0]+'</div><div class="ptip-a">'+x[1]+' '+sym+GO+'</div></div>';}).join('')+
       '</div><div class="ptip-t"><span>Total pooled</span><div>'+d[d.length-1]+' '+sym+'</div></div>';
     var b=el.getBoundingClientRect();tip.style.left=Math.round(b.left+b.width/2-175.5)+'px';tip.style.top=Math.round(b.top+16-tip.offsetHeight-12)+'px';tip.classList.add('on');cur=el;}
   function hide(){tip.classList.remove('on');cur=null;}
