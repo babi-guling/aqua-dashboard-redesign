@@ -152,10 +152,14 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .pool-bar{position:relative;height:6px;border-radius:21px;background:#e8e8ed;overflow:hidden}
 .pool{box-sizing:content-box;padding:16px;margin:-16px}
 .pool[data-sym]{cursor:default}
-.ptip{position:fixed;z-index:60;width:351px;background:#fff;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 20px 30px rgba(0,6,54,.06),0 0 1px rgba(0,6,54,.08);font-size:14px;line-height:20px;color:#000636;pointer-events:none;visibility:hidden;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .2s cubic-bezier(.2,.8,.2,1),top .12s ease-out}
+.ptip{position:fixed;z-index:60;width:351px;background:#fff;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 20px 30px rgba(0,6,54,.06),0 0 1px rgba(0,6,54,.08);font-size:14px;line-height:20px;color:#000636;pointer-events:none;visibility:hidden;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .2s cubic-bezier(.2,.8,.2,1),top .12s ease-out}
 .ptip.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
-.ptip:before{content:"";position:absolute;top:0;bottom:0;left:-20px;width:20px}
-.ptip:after{content:"";position:absolute;left:-8px;top:var(--ay,50%);margin-top:-8px;border:8px solid transparent;border-left:0;border-right-color:#fff}
+.ptip:before{content:"";position:absolute;left:0;right:0;bottom:-20px;height:20px}
+.ptip.dn:before{bottom:auto;top:-20px}
+.ptip:after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fff}
+.ptip.dn{transform:translateY(-4px)}
+.ptip.dn.on{transform:none}
+.ptip.dn:after{bottom:auto;top:-8px;border:8px solid transparent;border-top:0;border-bottom-color:#fff}
 .ptip-h{color:#6b6c83;line-height:16px}
 .ptip-l{display:flex;flex-direction:column;gap:8px}
 .ptip-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-radius:24px;background:#fafafb;cursor:pointer;transition:background .15s}
@@ -404,6 +408,7 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
         <div class="prof-links">
           <a class="pill copy" href="#" id="copyAddr"><span class="sw"><span class="a">GCY2DDE4...AYWSRRUD</span><span class="b">Copied</span></span><span class="swi"><img class="ic16 flip a" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M9%204H5C4.44772%204%204%204.44772%204%205V9C4%209.55228%204.44772%2010%205%2010V11C3.89543%2011%203%2010.1046%203%209V5C3%203.89543%203.89543%203%205%203H9C10.1046%203%2011%203.89543%2011%205H10C10%204.44772%209.55228%204%209%204Z%22%20fill%3D%22%23872AB0%22%2F%3E%3Cpath%20d%3D%22M12%207H8C7.44772%207%207%207.44772%207%208V12C7%2012.5523%207.44772%2013%208%2013H12C12.5523%2013%2013%2012.5523%2013%2012V8C13%207.44772%2012.5523%207%2012%207ZM8%206C6.89543%206%206%206.89543%206%208V12C6%2013.1046%206.89543%2014%208%2014H12C13.1046%2014%2014%2013.1046%2014%2012V8C14%206.89543%2013.1046%206%2012%206H8Z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23872AB0%22%2F%3E%3C%2Fsvg%3E" alt=""><img class="ic16 b" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5.58589%2010.7803L2.293%207.48741L3.0001%206.78031L6.293%2010.0732C6.48826%2010.2685%206.80484%2010.2685%207.0001%2010.0732L13.293%203.78031L14.0001%204.48741L7.70721%2010.7803C7.12142%2011.3661%206.17167%2011.3661%205.58589%2010.7803Z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23872AB0%22%2F%3E%3C%2Fsvg%3E" alt=""></span></a>
           <a class="pill" href="#">Explorer<img class="ic16" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%207L4%2011C4%2011.5523%204.44772%2012%205%2012L9%2012C9.55228%2012%2010%2011.5523%2010%2011L10%2010L11%2010L11%2011C11%2012.1046%2010.1046%2013%209%2013L5%2013C3.89543%2013%203%2012.1046%203%2011L3%207C3%205.89543%203.89543%205%205%205L6%205L6%206L5%206C4.44771%206%204%206.44772%204%207Z%22%20fill%3D%22%23872AB0%22%2F%3E%3Cpath%20d%3D%22M11%205H8V4L12%204V8H11V5Z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23872AB0%22%2F%3E%3Cpath%20d%3D%22M6.64648%208.64645L11.1465%204.14645L11.8536%204.85356L7.35359%209.35356L6.64648%208.64645Z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23872AB0%22%2F%3E%3C%2Fsvg%3E" alt=""></a>
+          <a class="pill" href="#" onclick="return false">Receive<svg class="ic16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><g stroke="#872AB0"><rect x="3.5" y="2.5" width="4" height="4" rx=".5"/><rect x="3.5" y="8.5" width="4" height="4" rx=".5"/><rect x="9.5" y="2.5" width="4" height="4" rx=".5"/></g><g fill="#872AB0"><rect x="10" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="12" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/></g></svg></a>
         </div>
       </div>
     </div>
@@ -654,20 +659,20 @@ document.getElementById('q').addEventListener('input',render);
 document.getElementById('hideSmall').addEventListener('change',render);
 (function(){var tip=document.createElement('div');tip.className='ptip';document.body.appendChild(tip);var cur=null,t=null;
   var GO='<svg class="go" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  function show(el){clearTimeout(t);if(el===cur)return;var sym=el.dataset.sym,d=POOLS[sym];if(!d)return;var rows=d.slice(0,-1);
+  function show(el){clearTimeout(t);if(el===cur)return;var sym=el.querySelector('.pool[data-sym]').dataset.sym,d=POOLS[sym];if(!d)return;var rows=d.slice(0,-1);
     tip.innerHTML='<div class="ptip-h">'+sym+' in '+rows.length+(rows.length===1?' pool':' pools')+'</div><div class="ptip-l">'+rows.map(function(x){
       return '<div class="ptip-r"><div class="ptip-p"><span class="ptip-ics">'+icHtml(sym,'tp-ic')+icHtml(x[0],'tp-ic')+'</span>'+sym+'/'+x[0]+'</div><div class="ptip-a">'+x[1]+' '+sym+GO+'</div></div>';}).join('')+
       '</div><div class="ptip-t"><span>Total pooled</span><div>'+d[d.length-1]+' '+sym+'</div></div>';
-    var b=el.getBoundingClientRect(),bar=el.querySelector('.pool-bar').getBoundingClientRect(),h=tip.offsetHeight;
-    var cy=(b.top+16+bar.bottom)/2,minT=Math.max(document.getElementById('tabs').getBoundingClientRect().bottom,0)+8,maxT=window.innerHeight-h-8;
-    var top=Math.round(Math.min(Math.max(cy-h/2,minT),maxT));
+    var pl=el.querySelector('.pool[data-sym]'),b=pl.getBoundingClientRect(),h=tip.offsetHeight;
+    var cx=b.left+b.width/2,topY=b.top+16,botY=b.bottom-16,minT=Math.max(document.getElementById('tabs').getBoundingClientRect().bottom,0)+8;
+    var top=Math.round(topY-12-h),dn=top<minT;if(dn)top=Math.round(botY+12);
     if(!tip.classList.contains('on'))tip.style.transition='none';
-    tip.style.left=Math.round(b.right-16+12)+'px';tip.style.top=top+'px';tip.style.setProperty('--ay',Math.round(Math.min(Math.max(cy-top,24),h-24))+'px');
+    tip.classList.toggle('dn',dn);tip.style.left=Math.round(cx-175.5)+'px';tip.style.top=top+'px';
     tip.offsetHeight;tip.style.transition='';tip.classList.add('on');cur=el;}
   function hide(){tip.classList.remove('on');cur=null;}
   function later(){clearTimeout(t);t=setTimeout(hide,150);}
   var rows=document.getElementById('rows');
-  rows.addEventListener('mouseover',function(e){var el=e.target.closest('.pool[data-sym]');if(el)show(el);else if(cur)later();});
+  rows.addEventListener('mouseover',function(e){var el=e.target.closest('.row');if(el&&el.querySelector('.pool[data-sym]'))show(el);else if(cur)later();});
   rows.addEventListener('mouseleave',function(){if(cur)later();});
   tip.addEventListener('mouseenter',function(){clearTimeout(t);});
   tip.addEventListener('mouseleave',later);
