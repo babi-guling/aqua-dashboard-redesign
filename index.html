@@ -144,11 +144,27 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .aic img{position:absolute;inset:0;width:100%;height:100%}
 .pair .nm{font-size:16px;line-height:28px;color:#000636}
 .pair .dm{font-size:10px;line-height:20px;color:#6b6c83}
-.amt{width:200px;flex:none;display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap}
+.amt{display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap}
+.rows .amt{width:200px;flex:none}
 .pool{width:214px;flex:none;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:16px;color:#6b6c83;white-space:nowrap}
 .pool-t{display:flex;justify-content:space-between;gap:4px}
 .pool-t b{font-weight:400;color:#23024d}
 .pool-bar{position:relative;height:6px;border-radius:21px;background:#e8e8ed;overflow:hidden}
+.pool[data-sym]{cursor:default}
+.ptip{position:fixed;z-index:60;width:317px;background:#fff;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 20px 30px rgba(0,6,54,.06),0 0 1px rgba(0,6,54,.08);font-size:14px;line-height:20px;color:#000636;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .2s cubic-bezier(.2,.8,.2,1)}
+.ptip.on{opacity:1;transform:none}
+.ptip:after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fff}
+.ptip-h{color:#6b6c83;line-height:16px}
+.ptip-l{display:flex;flex-direction:column;gap:8px}
+.ptip-r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:16px;border-radius:24px;background:#fafafb}
+.ptip-p{display:flex;align-items:center;gap:8px}
+.ptip-ics{display:flex;align-items:center;height:24px}
+.tp-ic{position:relative;width:20px;height:20px;border-radius:50%;overflow:hidden;flex:none}
+.tp-ic+.tp-ic{margin-left:-5px}
+.tp-ic.b{box-shadow:0 0 0 1.9px #fafafb}
+.tp-ic img{position:absolute;inset:0;width:100%;height:100%}
+.ptip-t{display:flex;justify-content:space-between}
+.ptip-t span{color:#6b6c83}
 .pool-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:21px;background:#872ab0}
 .amt b{font-size:16px;line-height:28px;color:#23024d}
 .amt span{font-size:14px;line-height:16px;color:#6b6c83}
@@ -580,11 +596,21 @@ var DATA=[
 ["XXA","Ixinium (ixinium.io)","0","$0.00",-4],
 ["yUSDC","yUSDC (ultracapital.xyz)","0","$0.00",-5]];
 var sortMode='pd';
-var POOL={BTC:[752.65,2,100],PYUSD:[131.12,2,36],LSP:[14.83,1,32],USDC:[12.93,3,61],XLM:[5.23,2,25],AQUA:[1.41,4,5]};
+var POOL={BTC:[752.65,2,100],PYUSD:[131.12,2,36],LSP:[14.83,1,32],USDC:[12.93,3,61],XLM:[5.23,2,25],AQUA:[1.32,4,5]};
+var POOLS={
+ BTC:[['USDC','0.00718435'],['AQUA','0.00213402'],'0.00931837'],
+ PYUSD:[['USDC','82.75'],['AQUA','48.37'],'131.12'],
+ LSP:[['XLM','131,261.53'],'131,261.53'],
+ USDC:[['BTC','7.4123'],['PYUSD','3.5487'],['AQUA','2.1014'],'13.0624'],
+ XLM:[['LSP','899.44'],['AQUA','412.50'],'1,311.94'],
+ AQUA:[['USDC','402.15'],['BTC','318.20'],['XLM','251.00'],['PYUSD','165.00'],'1,136.35']};
+function icHtml(sym,cls){var ic=ICONS[sym];
+  var img=ic.ins?'<span style="position:absolute;inset:'+ic.ins+'"><img src="'+ic.s+'" alt=""></span>':'<img src="'+ic.s+'" alt="">';
+  return '<span class="'+cls+(ic.b?' b':'')+'">'+img+'</span>';}
 function pooled(r){var p=POOL[r[0]];return p?p[0]:null}
 function usd(r){return r[3].charAt(0)==='$'?parseFloat(r[3].slice(1).replace(/,/g,'')):null}
 function poolCell(r){var p=POOL[r[0]];if(!p)return '<div class="pool"></div>';
-  return '<div class="pool"><div class="pool-t"><span><b>$'+p[0].toFixed(2)+'</b> in '+p[1]+(p[1]===1?' pool':' pools')+'</span><span>'+p[2]+'%</span></div><div class="pool-bar"><i style="width:'+p[2]+'%"></i></div></div>';}
+  return '<div class="pool" data-sym="'+r[0]+'"><div class="pool-t"><span><b>$'+p[0].toFixed(2)+'</b> in '+p[1]+(p[1]===1?' pool':' pools')+'</span><span>'+p[2]+'%</span></div><div class="pool-bar"><i style="width:'+p[2]+'%"></i></div></div>';}
 function render(){
   var q=document.getElementById('q').value.trim().toLowerCase();
   var hide=document.getElementById('hideSmall').checked;
@@ -617,6 +643,16 @@ document.getElementById('q').addEventListener('input',render);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false)});
 })();
 document.getElementById('hideSmall').addEventListener('change',render);
+(function(){var tip=document.createElement('div');tip.className='ptip';document.body.appendChild(tip);var cur=null;
+  function show(el){var sym=el.dataset.sym,d=POOLS[sym];if(!d)return;var rows=d.slice(0,-1);
+    tip.innerHTML='<div class="ptip-h">'+sym+' in '+rows.length+(rows.length===1?' pool':' pools')+'</div><div class="ptip-l">'+rows.map(function(x){
+      return '<div class="ptip-r"><div class="ptip-p"><span class="ptip-ics">'+icHtml(sym,'tp-ic')+icHtml(x[0],'tp-ic')+'</span>'+sym+'/'+x[0]+'</div><div>'+x[1]+' '+sym+'</div></div>';}).join('')+
+      '</div><div class="ptip-t"><span>Total pooled</span><div>'+d[d.length-1]+' '+sym+'</div></div>';
+    var b=el.getBoundingClientRect();tip.style.left=Math.round(b.left+b.width/2-158.5)+'px';tip.style.top=Math.round(b.top-tip.offsetHeight-12)+'px';tip.classList.add('on');cur=el;}
+  function hide(){tip.classList.remove('on');cur=null;}
+  var rows=document.getElementById('rows');
+  rows.addEventListener('mouseover',function(e){var el=e.target.closest('.pool[data-sym]');if(el&&el!==cur)show(el);else if(!el&&cur)hide();});
+  rows.addEventListener('mouseleave',hide);window.addEventListener('scroll',hide,{passive:true});})();
 document.getElementById('rows').addEventListener('click',function(e){if(e.target.id==='hidShow'){document.getElementById('hideSmall').checked=false;render();}});
 render();
 
