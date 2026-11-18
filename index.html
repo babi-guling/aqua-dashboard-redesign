@@ -134,6 +134,9 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .srt-m button.on:after{opacity:1}
 .sorticon img{position:absolute}
 .rows{display:flex;flex-direction:column}
+.hid-row{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0 0;margin-top:8px;border-top:1px solid #e8e8ed;font-size:14px;line-height:16px;color:#6b6c83}
+.hid-show{border:0;background:#fafafb;font:inherit;color:#872ab0;padding:8px 14px;border-radius:8px;cursor:pointer;transition:background .15s}
+.hid-show:hover{background:#f4f0f7}
 .row{display:flex;align-items:center;gap:16px;padding:16px 0}
 .pair{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:48px}
 .aic{position:relative;width:32px;height:32px;flex:none;overflow:hidden}
@@ -575,7 +578,9 @@ function usd(r){return r[3].charAt(0)==='$'?parseFloat(r[3].slice(1).replace(/,/
 function render(){
   var q=document.getElementById('q').value.trim().toLowerCase();
   var hide=document.getElementById('hideSmall').checked;
-  var list=DATA.filter(function(r){var v=usd(r);return (!q||(r[0]+' '+r[1]).toLowerCase().indexOf(q)>-1)&&!(hide&&v!==null&&v<0.01)});
+  var match=DATA.filter(function(r){return !q||(r[0]+' '+r[1]).toLowerCase().indexOf(q)>-1});
+  var list=match.filter(function(r){var v=usd(r);return !(hide&&v!==null&&v<0.01)});
+  var hidden=match.length-list.length;
   list.sort(function(a,b){
     if(sortMode==='az'||sortMode==='za'){var c=a[0].localeCompare(b[0],'en',{sensitivity:'base'});return sortMode==='az'?c:-c;}
     if(sortMode==='vd')return b[4]-a[4];
@@ -584,7 +589,7 @@ function render(){
   var h=list.map(function(r){var ic=ICONS[r[0]];
     var img=ic.ins?'<span style="position:absolute;inset:'+ic.ins+'"><img src="'+ic.s+'" alt=""></span>':'<img src="'+ic.s+'" alt="">';
     return '<div class="row"><div class="pair"><span class="aic'+(ic.b?' b':'')+'">'+img+'</span><div><div class="nm">'+r[0]+'</div><div class="dm">'+r[1]+'</div></div></div><div class="amt"><b>'+r[2]+'</b><span>'+r[3]+'</span></div></div>';}).join('');
-  document.getElementById('rows').innerHTML=h||'<div class="empty">No assets found</div>';
+  document.getElementById('rows').innerHTML=(h||(hidden?'':'<div class="empty">No assets found</div>'))+(hidden?'<div class="hid-row">'+hidden+(hidden===1?' asset':' assets')+' less than $0.01 hidden<button type="button" class="hid-show" id="hidShow">Show</button></div>':'');
   document.getElementById('cnt').textContent=list.length+(list.length===1?' asset':' assets');
 }
 document.getElementById('q').addEventListener('input',render);
@@ -598,6 +603,7 @@ document.getElementById('q').addEventListener('input',render);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false)});
 })();
 document.getElementById('hideSmall').addEventListener('change',render);
+document.getElementById('rows').addEventListener('click',function(e){if(e.target.id==='hidShow'){document.getElementById('hideSmall').checked=false;render();}});
 render();
 
 /* sticky tabs right under the header */
