@@ -218,12 +218,13 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .ap-l{display:flex;flex-direction:column;gap:8px}
 .ap-r{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-radius:16px;background:#fafafb;transition:background .15s}
 .ap-r:hover{background:#f4f0f7}
-.ap-r .go{position:absolute;right:6px;top:50%;margin-top:-8px;width:16px;height:16px;color:#872ab0;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .2s}
+.ap-r .go{position:absolute;right:14px;top:50%;margin-top:-8px;width:16px;height:16px;color:#872ab0;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .2s}
 .ap-r:hover .go{opacity:1;transform:none}
 .ap-p,.ap-a,.ap-tags{display:flex;align-items:center;gap:8px}
 .ap-tags{gap:4px}
 .ap-a s,.ap-t s{text-decoration:none;color:#6b6c83;line-height:16px}
-.ap-a b{font-weight:700;color:#000636;text-align:right}
+.ap-a b{font-weight:400;color:#000636;text-align:right}
+.ap-x,.ap-a.v{margin-right:28px}
 .ap-a b,.ap-a s{font-variant-numeric:tabular-nums}
 .ap-a s{width:75px;flex:none;text-align:left}
 .tg{display:inline-flex;align-items:center;height:16px;padding:0 4px;border-radius:3px;font-size:8px;line-height:1;text-transform:uppercase;border:1px solid}
@@ -232,6 +233,10 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .tg.stable{color:#1f9d55;border-color:#1f9d55}
 .tg.tgf{border:0;background:#e8e8ed;color:#6b6c83;font-size:10px}
 .tg-cr{width:16px;height:16px;flex:none}
+.ap-x{display:flex;align-items:center;font-weight:700;color:#2e30f0;font-variant-numeric:tabular-nums}
+.ap-x svg{width:16px;height:16px;flex:none}
+.vnum{display:inline-flex;align-items:center;height:24px;padding:2px 4px;border-radius:7px;background:#6b6c83;color:#fff;font-size:12px;line-height:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.ap-n{padding:0 16px;color:#6b6c83;line-height:16px}
 .ap-t{display:flex;justify-content:space-between;padding:0 16px}
 .ap-t>span{color:#000636}
 .ap-t div{display:flex;align-items:center;gap:8px}
@@ -655,14 +660,17 @@ var DATA=[
 ["AQUA","AQUA (aqua.network)","25,024.62","$29.19",29.193],
 ["XLM","Stellar Lumens (stellar.org)","5,287.91","$21.08",21.089],
 ["USDC","USD Coin (centre.io)","0","$0.00",0],
-["ICE","ICE (aqua.network)","10,298.4369191","Not tradable",-1],
-["governICE","governICE (aqua.network)","9,435.4369191","Not tradable",-2],
-["upvoteICE","upvoteICE (aqua.network)","14,057.7968739","Not tradable",-3],
+["ICE","ICE (aqua.network)","10,298.43","Not tradable",-1],
+["governICE","governICE (aqua.network)","9,435.43","Not tradable",-2],
+["upvoteICE","upvoteICE (aqua.network)","14,057.79","Not tradable",-3],
 ["XXA","Ixinium (ixinium.io)","0","$0.00",-4],
 ["yUSDC","yUSDC (ultracapital.xyz)","0","$0.00",-5]];
 var sortMode='vd';
 var POOL={BTC:[536.05,2,42],PYUSD:[1362.49,2,50],LSP:[0.04,1,0.07],USDC:[21.30,3,100],XLM:[4.93,2,19],AQUA:[1.33,4,4]};
-var VOTES={governICE:['5,897.21',2,38],upvoteICE:['7,073.21',4,33]};
+var BOOST={ICE:[['BTC','XLM','2.5'],['BTC','USDC','1.8']]};
+var VLIST={governICE:[['#471','Add XTAR to the asset registry','5,897.21']],
+ upvoteICE:[[['AQUA','XLM'],'AQUA/XLM','3,120.00'],[['BTC','USDC'],'BTC/USDC','2,015.41'],[['XLM','USDC'],'XLM/USDC','1,237.80'],[['PYUSD','USDC'],'PYUSD/USDC','700.00']]};
+var VOTES={ICE:['4,186.52',2,'boost',' pool',' pools'],governICE:['5,897.21',1,'in',' vote',' votes'],upvoteICE:['7,073.21',4,'in',' vote',' votes']};
 var POOLS={
  BTC:[['XLM','0.00531837'],['USDC','0.00131837'],'0.00663674'],
  PYUSD:[['USDC','859.86'],['AQUA','502.63'],'1,362.49'],
@@ -675,16 +683,26 @@ function icHtml(sym,cls){var ic=ICONS[sym];
   return '<span class="'+cls+(ic.b?' b':'')+'">'+img+'</span>';}
 function pooled(r){var p=POOL[r[0]];return p?p[0]:null}
 function usd(r){return r[3].charAt(0)==='$'?parseFloat(r[3].slice(1).replace(/,/g,'')):null}
-function poolCell(r){var p=POOL[r[0]],v=VOTES[r[0]];if(v)return '<div class="pool"><div class="pool-t"><span><b>'+v[0]+'</b> in '+v[1]+(v[1]===1?' vote':' votes')+'</span><span>'+v[2]+'%</span></div><div class="pool-bar vt"><i style="width:'+v[2]+'%"></i></div></div>';if(!p)return '<div class="pool"></div>';
-  var d=POOLS[r[0]];
-  return '<div class="pool" data-sym="'+r[0]+'"><div class="pool-t"><span><b>'+d[d.length-1]+'</b> in '+p[1]+(p[1]===1?' pool':' pools')+'</span><span>'+p[2]+'%</span></div><div class="pool-bar"><i style="width:'+p[2]+'%"></i></div></div>';}
+function share(used,avail){var u=num(used),t=u+num(avail),x=t?u/t*100:0;return {w:x,t:(x>0&&x<1?x.toFixed(2):String(Math.round(x)))+'%'};}
+function poolCell(r){var p=POOL[r[0]],v=VOTES[r[0]];if(v){var q=share(v[0],r[2]);return '<div class="pool"'+(BOOST[r[0]]||VLIST[r[0]]?' data-sym="'+r[0]+'"':'')+'><div class="pool-t"><span><b>'+v[0]+'</b> '+v[2]+' '+v[1]+(v[1]===1?v[3]:v[4])+'</span><span>'+q.t+'</span></div><div class="pool-bar vt"><i style="width:'+q.w+'%"></i></div></div>';}if(!p)return '<div class="pool"></div>';
+  var d=POOLS[r[0]],q=share(d[d.length-1],r[2]);
+  return '<div class="pool" data-sym="'+r[0]+'"><div class="pool-t"><span><b>'+d[d.length-1]+'</b> in '+p[1]+(p[1]===1?' pool':' pools')+'</span><span>'+q.t+'</span></div><div class="pool-bar"><i style="width:'+q.w+'%"></i></div></div>';}
 var ACC=!/[?&]v=hover(&|$)/.test(location.search);if(ACC)document.documentElement.classList.add('acc');
 var OPEN={};
 var PMETA={'AQUA/BTC':['volatile','0.3%',1],'AQUA/USDC':['volatile','0.3%',1],'AQUA/XLM':['volatile','0.3%',1],'AQUA/PYUSD':['volatile','0.3%',1],'BTC/USDC':['concentrated','0.4%',1],'BTC/XLM':['volatile','0.4%',1],'PYUSD/USDC':['stable','0.1%',0],'LSP/XLM':['volatile','0.3%',0]};
 var CHEV='<span class="chev">'+'<svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.07456 10.7827L1.78027 5.48842L2.48745 4.78125L7.78174 10.0755C7.87552 10.1693 8.00271 10.222 8.13532 10.222C8.26794 10.222 8.39512 10.1693 8.48891 10.0755L13.7832 4.78125L14.4904 5.48842L9.19708 10.7827C9.05775 10.9221 8.89231 11.0327 8.71021 11.1082C8.52811 11.1837 8.33293 11.2225 8.13582 11.2225C7.93871 11.2225 7.74353 11.1837 7.56144 11.1082C7.37934 11.0327 7.2139 10.9221 7.07456 10.7827Z" fill="#000636"/></svg>'+'</span>',CROWN='<svg class="tg-cr" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" rx="3" fill="#872AB0" fill-opacity=".1"/><path d="M7.999 5a.4.4 0 0 0-.35.218L6.298 7.722 4.663 6.246a.4.4 0 0 0-.653.444l.812 3.962a.4.4 0 0 0 .396.348h5.563a.4.4 0 0 0 .396-.348l.813-3.962a.4.4 0 0 0-.655-.444L9.702 7.722 8.348 5.218A.4.4 0 0 0 7.999 5Z" fill="#872AB0"/></svg>';
 function money(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function num(x){return parseFloat(String(x).replace(/,/g,''))}
-function detBody(sym){var d=POOLS[sym],rows=d.slice(0,-1),tot=d[d.length-1],price=POOL[sym][0]/num(tot);
+var GOI='<svg class="go" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function boostBody(sym){var b=BOOST[sym];
+  return '<div class="adet-h">'+sym+' boosting '+b.length+(b.length===1?' pool':' pools')+'</div><div class="ap-l">'+b.map(function(x){
+    var m=PMETA[[x[0],x[1]].sort().join('/')]||['volatile','0.3%',0];
+    return '<div class="ap-r"><div class="ap-p"><span class="ptip-ics">'+icHtml(x[0],'tp-ic')+icHtml(x[1],'tp-ic')+'</span>'+x[0]+'/'+x[1]+'<span class="ap-tags"><span class="tg '+m[0]+'">'+m[0]+'</span>'+(m[2]?CROWN:'')+'<span class="tg tgf">'+m[1]+'</span></span></div><div class="ap-x">'+x[2]+'<svg viewBox="0 0 16 16" fill="none"><path d="M5 5l6 6M11 5l-6 6" stroke="#2E30F0" stroke-width="1.5"/></svg></div>'+GOI+'</div>';}).join('')+
+    '</div><div class="ap-n">Your total '+sym+' balance boosts rewards in all eligible pools at once</div>';}
+function voteBody(sym){var v=VLIST[sym];
+  return '<div class="adet-h">'+sym+' in '+v.length+(v.length===1?' vote':' votes')+'</div><div class="ap-l">'+v.map(function(x){
+    return '<div class="ap-r"><div class="ap-p">'+(typeof x[0]==='string'?'<span class="vnum">'+x[0]+'</span>':'<span class="ptip-ics">'+x[0].map(function(k){return icHtml(k,'tp-ic')}).join('')+'</span>')+x[1]+'</div><div class="ap-a v"><b>'+x[2]+' '+sym+'</b></div>'+GOI+'</div>';}).join('')+'</div>';}
+function detBody(sym){if(BOOST[sym])return boostBody(sym);if(VLIST[sym])return voteBody(sym);var d=POOLS[sym],rows=d.slice(0,-1),tot=d[d.length-1],price=POOL[sym][0]/num(tot);
   var go='<svg class="go" viewBox="0 0 16 16" fill="none"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   return '<div class="adet-h">'+sym+' in '+rows.length+(rows.length===1?' pool':' pools')+'</div><div class="ap-l">'+rows.map(function(x){
     var m=PMETA[[sym,x[0]].sort().join('/')]||['volatile','0.3%',0];
@@ -708,7 +726,7 @@ function render(){
   var h=list.map(function(r){var ic=ICONS[r[0]];
     var img=ic.ins?'<span style="position:absolute;inset:'+ic.ins+'"><img src="'+ic.s+'" alt=""></span>':'<img src="'+ic.s+'" alt="">';
     var row='<div class="row"><div class="pair"><span class="aic'+(ic.b?' b':'')+'">'+img+'</span><div><div class="nm">'+r[0]+'</div><div class="dm">'+r[1]+'</div></div></div>'+poolCell(r)+'<div class="amt"><b>'+r[2]+'</b><span>'+r[3]+'</span></div>';
-    if(!ACC)return row+'</div>';var has=!!POOLS[r[0]];
+    if(!ACC)return row+'</div>';var has=!!(POOLS[r[0]]||BOOST[r[0]]||VLIST[r[0]]);
     return has?'<div class="arow'+(OPEN[r[0]]?' open':'')+'" data-sym="'+r[0]+'">'+row+CHEV+'</div>'+detHtml(r[0])+'</div>':row+'<span class="chev" style="visibility:hidden"></span></div>';}).join('');
   document.getElementById('rows').innerHTML=(h||(hidden?'':'<div class="empty">No assets found</div>'))+(hidden?'<div class="hid-row">'+hidden+(hidden===1?' asset':' assets')+' less than $0.01 hidden<button type="button" class="hid-show" id="hidShow">Show</button></div>':'');
   var av=0,pl=0,np=0;DATA.forEach(function(r){var v=usd(r);if(v)av+=v;});for(var k in POOL){pl+=POOL[k][0];np++;}
@@ -726,7 +744,7 @@ document.getElementById('q').addEventListener('input',render);
   sync();})();
 document.getElementById('hideSmall').addEventListener('change',render);
 (function(){var tip=document.createElement('div');tip.className='ptip';document.body.appendChild(tip);var cur=null,t=null;
-  function show(el){clearTimeout(t);if(el===cur)return;var sym=el.dataset.sym;if(!POOLS[sym])return;
+  function show(el){clearTimeout(t);if(el===cur)return;var sym=el.dataset.sym;if(!POOLS[sym]&&!BOOST[sym]&&!VLIST[sym])return;
     tip.innerHTML='<div class="adet-c">'+detBody(sym)+'</div>';
     var lf=el.dataset.side==='l',b=el.getBoundingClientRect(),h=tip.offsetHeight;
     var cy=lf?(b.top+b.bottom)/2:(b.top+24+el.querySelector('.pool-bar').getBoundingClientRect().bottom)/2,minT=Math.max(document.getElementById('tabs').getBoundingClientRect().bottom,0)+8,maxT=window.innerHeight-h-8;
