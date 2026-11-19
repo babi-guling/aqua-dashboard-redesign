@@ -9,7 +9,8 @@ Open `index.html` in a browser. It is fully self-contained (icons and screenshot
 
 ## Variants
 
-One file, two ways to show an asset's pools:
+One file, three ways to show an asset's pools:
 
 - `index.html` — **accordion** (main): click a row to expand its pools.
 - `index.html?v=hover` — **hover**: the same pool details appear in a popover when hovering the Pooled bar.
+- `index.html?v=plain` — **plain**: no pool details, just the table.

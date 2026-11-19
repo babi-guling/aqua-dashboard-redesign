@@ -202,7 +202,7 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .acc .thead .th-c{display:block;width:16px;flex:none}
 .acc .chev{display:block;width:16px;height:16px;flex:none;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .acc .chev svg{display:block;width:16px;height:16px}
-.acc .pool{padding:0;margin:0}
+.acc .pool,.plain .pool{padding:0;margin:0}
 .arow{margin:0 -16px;border-radius:24px;transition:background .15s,margin .3s cubic-bezier(.2,.8,.2,1)}
 .arow.open{margin-bottom:8px}
 .arow>.row{margin:0!important}
@@ -687,7 +687,7 @@ function share(used,avail){var u=num(used),t=u+num(avail),x=t?u/t*100:0;return {
 function poolCell(r){var p=POOL[r[0]],v=VOTES[r[0]];if(v){var q=share(v[0],r[2]);return '<div class="pool"'+(BOOST[r[0]]||VLIST[r[0]]?' data-sym="'+r[0]+'"':'')+'><div class="pool-t"><span><b>'+v[0]+'</b> '+v[2]+' '+v[1]+(v[1]===1?v[3]:v[4])+'</span><span>'+q.t+'</span></div><div class="pool-bar vt"><i style="width:'+q.w+'%"></i></div></div>';}if(!p)return '<div class="pool"></div>';
   var d=POOLS[r[0]],q=share(d[d.length-1],r[2]);
   return '<div class="pool" data-sym="'+r[0]+'"><div class="pool-t"><span><b>'+d[d.length-1]+'</b> in '+p[1]+(p[1]===1?' pool':' pools')+'</span><span>'+q.t+'</span></div><div class="pool-bar"><i style="width:'+q.w+'%"></i></div></div>';}
-var ACC=!/[?&]v=hover(&|$)/.test(location.search);if(ACC)document.documentElement.classList.add('acc');
+var VMODE=(location.search.match(/[?&]v=(hover|plain)(&|$)/)||[])[1]||'acc',ACC=VMODE==='acc',PLAIN=VMODE==='plain';if(PLAIN)document.documentElement.classList.add('plain');if(ACC)document.documentElement.classList.add('acc');
 var OPEN={};
 var PMETA={'AQUA/BTC':['volatile','0.3%',1],'AQUA/USDC':['volatile','0.3%',1],'AQUA/XLM':['volatile','0.3%',1],'AQUA/PYUSD':['volatile','0.3%',1],'BTC/USDC':['concentrated','0.4%',1],'BTC/XLM':['volatile','0.4%',1],'PYUSD/USDC':['stable','0.1%',0],'LSP/XLM':['volatile','0.3%',0]};
 var CHEV='<span class="chev">'+'<svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.07456 10.7827L1.78027 5.48842L2.48745 4.78125L7.78174 10.0755C7.87552 10.1693 8.00271 10.222 8.13532 10.222C8.26794 10.222 8.39512 10.1693 8.48891 10.0755L13.7832 4.78125L14.4904 5.48842L9.19708 10.7827C9.05775 10.9221 8.89231 11.0327 8.71021 11.1082C8.52811 11.1837 8.33293 11.2225 8.13582 11.2225C7.93871 11.2225 7.74353 11.1837 7.56144 11.1082C7.37934 11.0327 7.2139 10.9221 7.07456 10.7827Z" fill="#000636"/></svg>'+'</span>',CROWN='<svg class="tg-cr" viewBox="0 0 16 16" fill="none"><rect width="16" height="16" rx="3" fill="#872AB0" fill-opacity=".1"/><path d="M7.999 5a.4.4 0 0 0-.35.218L6.298 7.722 4.663 6.246a.4.4 0 0 0-.653.444l.812 3.962a.4.4 0 0 0 .396.348h5.563a.4.4 0 0 0 .396-.348l.813-3.962a.4.4 0 0 0-.655-.444L9.702 7.722 8.348 5.218A.4.4 0 0 0 7.999 5Z" fill="#872AB0"/></svg>';
@@ -755,8 +755,9 @@ document.getElementById('hideSmall').addEventListener('change',render);
   function hide(){tip.classList.remove('on');cur=null;}
   function later(){clearTimeout(t);t=setTimeout(hide,150);}
   var rows=document.getElementById('rows');
-  rows.addEventListener('mouseover',function(e){if(ACC)return;var el=e.target.closest('.pool[data-sym]');if(el)show(el);else if(cur)later();});
+  rows.addEventListener('mouseover',function(e){if(ACC||PLAIN)return;var el=e.target.closest('.pool[data-sym]');if(el)show(el);else if(cur)later();});
   rows.addEventListener('mouseleave',function(){if(cur)later();});
+  tip.addEventListener('mouseenter',function(){clearTimeout(t);});
   tip.addEventListener('mouseleave',later);
   window.addEventListener('scroll',hide,{passive:true});})();
 document.getElementById('rows').addEventListener('click',function(e){
