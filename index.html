@@ -433,8 +433,8 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .smod[data-v=rev] .sh,.smod[data-v=pick] .sh{padding-top:var(--pt)}
 .sh h2{font-size:36px;line-height:42px;font-weight:400;color:#23024d}
 .sh p{margin-top:8px;font-size:16px;line-height:28px;color:rgba(0,4,39,.7)}
-.sv-pick .sc{gap:32px}
-.sc{padding:0 var(--px);display:flex;flex-direction:column;gap:8px}
+.sv-pick .smc{gap:32px}
+.smc{padding:0 var(--px);display:flex;flex-direction:column;gap:8px}
 .sf{padding:32px var(--px) var(--px)}
 .bbig{width:100%;height:66px;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:24px;background:#23024d;color:#fff;font-size:16px;line-height:18px;font-weight:700;letter-spacing:3.2px;text-transform:uppercase;transition:background .15s,color .15s}
 .bbig:hover{background:#872ab0}
@@ -798,7 +798,7 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 
     <section class="sv sv-form">
       <div class="sh"><h2 id="sndT">Send payment</h2><p>Please make sure all the transaction details are correct.</p></div>
-      <div class="sc">
+      <div class="smc">
         <div class="sbox samt" id="sAmtBox">
           <div class="sl">
             <label for="sAmt">Amount</label>
@@ -833,16 +833,16 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 
     <section class="sv sv-pick">
       <div class="sh"><h2>Choose asset</h2></div>
-      <div class="sc">
+      <div class="smc">
         <label class="psrch"><input id="pQ" placeholder="Search asset or enter home domain" autocomplete="off" aria-label="Search asset"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#000636"/><path d="M10.5 10.5L13.5 13.5" stroke="#000636"/></svg></label>
         <div class="pchips" id="pChips"></div>
       </div>
-      <div class="sc"><div class="plist" id="pList"></div></div>
+      <div class="smc"><div class="plist" id="pList"></div></div>
     </section>
 
     <section class="sv sv-rev">
       <div class="sh"><h2>Review payment</h2><p>Please make sure all the transaction details are correct.</p></div>
-      <div class="sc" id="rvBody"></div>
+      <div class="smc" id="rvBody"></div>
       <div class="sf"><button class="bbig" id="rvGo">Confirm transaction</button></div>
     </section>
 
