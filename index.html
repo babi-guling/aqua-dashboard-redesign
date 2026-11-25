@@ -496,7 +496,6 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .memo-b{display:grid;grid-template-rows:0fr;opacity:0;padding:0 var(--ix);transition:grid-template-rows .25s cubic-bezier(.2,.8,.2,1),opacity .2s,margin .25s}
 .memo-b>div{overflow:hidden;min-height:0}
 .memo.on .memo-b{grid-template-rows:1fr;opacity:1;margin-top:16px}
-.memo{cursor:pointer}
 .memo.on{cursor:text}
 .sbox button,.memo button{cursor:pointer}
 .memo-b input{display:block;width:100%;height:20px;padding:0;border:0;background:none;font:inherit;font-size:14px;line-height:20px;color:#000636;outline:0}
@@ -1104,8 +1103,7 @@ tg.addEventListener('click',function(){var on=tg.getAttribute('aria-checked')!==
 /* whole grey block focuses its input */
 function hit(box,inp,skip){box.addEventListener('mousedown',function(e){if(e.target===inp||(skip&&e.target.closest(skip)))return;e.preventDefault();inp.focus();var n=inp.value.length;try{inp.setSelectionRange(n,n)}catch(_){}})}
 hit($('sAmtBox'),amtI,'button');hit($('sToBox'),toI);
-$('sMemo').addEventListener('mousedown',function(e){if(e.target===memoI||e.target.closest('.stg,.mtip'))return;e.preventDefault();
-  if(!$('sMemo').classList.contains('on')){tg.click();return}memoI.focus();});
+$('sMemo').addEventListener('mousedown',function(e){if(!$('sMemo').classList.contains('on')||e.target===memoI||e.target.closest('.stg,.mtip'))return;e.preventDefault();memoI.focus();});
 var tip=$('sTip'),tm;
 tip.addEventListener('mouseenter',function(){clearTimeout(tm);tip.classList.add('open')});
 tip.addEventListener('mouseleave',function(){tm=setTimeout(function(){tip.classList.remove('open')},200)});
