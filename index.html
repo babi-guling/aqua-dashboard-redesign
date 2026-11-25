@@ -443,11 +443,11 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .bbig .spn{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spn .7s linear infinite}
 @keyframes spn{to{transform:rotate(360deg)}}
 /* boxes */
-.sbox{background:#fafafb;border-radius:40px;padding:var(--iy) var(--ix);border:1px solid transparent;transition:border-color .15s,background .15s,box-shadow .15s}
+.sbox{cursor:text;background:#fafafb;border-radius:40px;padding:var(--iy) var(--ix);border:1px solid transparent;transition:border-color .15s,background .15s,box-shadow .15s}
 .sbox:focus-within{border-color:transparent;background:#fff;box-shadow:inset 0 0 0 2px #872ab0}
 .sbox.err{border-color:rgba(232,74,74,.5)}
 .sbox.err:focus-within{border-color:transparent;box-shadow:inset 0 0 0 2px #e84a4a}
-.sbox label{display:block;font-size:16px;line-height:18px;color:#000636}
+.sbox label{cursor:text;display:block;font-size:16px;line-height:18px;color:#000636}
 .ssub{display:block;font-size:14px;line-height:16px;color:#6b6c83;white-space:nowrap}
 .ssub.e{color:#e84a4a}
 .samt{display:flex;gap:16px;justify-content:space-between}
@@ -496,7 +496,9 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .memo-b{display:grid;grid-template-rows:0fr;opacity:0;padding:0 var(--ix);transition:grid-template-rows .25s cubic-bezier(.2,.8,.2,1),opacity .2s,margin .25s}
 .memo-b>div{overflow:hidden;min-height:0}
 .memo.on .memo-b{grid-template-rows:1fr;opacity:1;margin-top:16px}
-.memo-b{cursor:text}
+.memo{cursor:pointer}
+.memo.on{cursor:text}
+.sbox button,.memo button{cursor:pointer}
 .memo-b input{display:block;width:100%;height:20px;padding:0;border:0;background:none;font:inherit;font-size:14px;line-height:20px;color:#000636;outline:0}
 .memo-b input::placeholder{color:#6b6c83}
 /* picker */
@@ -1099,7 +1101,11 @@ toI.addEventListener('paste',function(){setTimeout(setTo,0)});
 /* memo */
 tg.addEventListener('click',function(){var on=tg.getAttribute('aria-checked')!=='true';tg.setAttribute('aria-checked',on);
   $('sMemo').classList.toggle('on',on);memoI.tabIndex=on?0:-1;if(on)setTimeout(function(){memoI.focus({preventScroll:true})},260);});
-SM.querySelector('.memo-b').addEventListener('click',function(){memoI.focus()});
+/* whole grey block focuses its input */
+function hit(box,inp,skip){box.addEventListener('mousedown',function(e){if(e.target===inp||(skip&&e.target.closest(skip)))return;e.preventDefault();inp.focus();var n=inp.value.length;try{inp.setSelectionRange(n,n)}catch(_){}})}
+hit($('sAmtBox'),amtI,'button');hit($('sToBox'),toI);
+$('sMemo').addEventListener('mousedown',function(e){if(e.target===memoI||e.target.closest('.stg,.mtip'))return;e.preventDefault();
+  if(!$('sMemo').classList.contains('on')){tg.click();return}memoI.focus();});
 var tip=$('sTip'),tm;
 tip.addEventListener('mouseenter',function(){clearTimeout(tm);tip.classList.add('open')});
 tip.addEventListener('mouseleave',function(){tm=setTimeout(function(){tip.classList.remove('open')},200)});
