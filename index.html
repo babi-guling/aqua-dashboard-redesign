@@ -475,8 +475,9 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .to-sub .idn2{width:14px;height:14px}
 .to-sub .spn{width:12px;height:12px;border-radius:50%;border:1.5px solid #e8e8ed;border-top-color:#872ab0;animation:spn .7s linear infinite}
 /* memo */
-.memo{border-radius:24px;padding:var(--iy) 0 16px;display:flex;flex-direction:column;transition:background .25s,padding .25s}
+.memo{border-radius:40px;padding:var(--iy) 0 16px;display:flex;flex-direction:column;transition:background .25s,padding .25s,box-shadow .15s}
 .memo.on{background:#fafafb;padding-bottom:var(--iy)}
+.memo.on:has(#sMemoIn:focus){background:#fff;box-shadow:inset 0 0 0 2px #872ab0}
 .memo-h{display:flex;align-items:center;justify-content:space-between;padding:0 var(--ix)}
 .memo-h>span{display:flex;align-items:center;gap:8px;font-size:14px;line-height:20px;color:#000636}
 .mtip{position:relative}
@@ -495,12 +496,11 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 .memo-b{display:grid;grid-template-rows:0fr;opacity:0;padding:0 var(--ix);transition:grid-template-rows .25s cubic-bezier(.2,.8,.2,1),opacity .2s,margin .25s}
 .memo-b>div{overflow:hidden;min-height:0}
 .memo.on .memo-b{grid-template-rows:1fr;opacity:1;margin-top:16px}
-.memo-b input{width:100%;height:66px;padding:0 28px;border-radius:24px;border:1px solid #e8e8ed;background:#fff;font:inherit;font-size:14px;line-height:16px;color:#000636;outline:0;transition:border-color .15s,box-shadow .15s}
-.memo-b input:hover{border-color:#c7b3d6}
-.memo-b input:focus{border-color:transparent;box-shadow:inset 0 0 0 2px #872ab0}
+.memo-b{cursor:text}
+.memo-b input{display:block;width:100%;height:20px;padding:0;border:0;background:none;font:inherit;font-size:14px;line-height:20px;color:#000636;outline:0}
 .memo-b input::placeholder{color:#6b6c83}
 /* picker */
-.psrch{display:flex;align-items:center;gap:24px;height:66px;padding:0 24px;border:1px solid #e8e8ed;border-radius:5px;transition:border-color .15s,box-shadow .15s}
+.psrch{display:flex;align-items:center;gap:24px;height:66px;padding:0 24px;border:1px solid #e8e8ed;border-radius:24px;transition:border-color .15s,box-shadow .15s}
 .psrch:hover{border-color:#c7b3d6}
 .psrch:focus-within{border-color:transparent;box-shadow:inset 0 0 0 2px #872ab0}
 .psrch input{flex:1;font:inherit;font-size:14px;line-height:20px;color:#000636;border:0;outline:0;background:none}
@@ -1099,6 +1099,7 @@ toI.addEventListener('paste',function(){setTimeout(setTo,0)});
 /* memo */
 tg.addEventListener('click',function(){var on=tg.getAttribute('aria-checked')!=='true';tg.setAttribute('aria-checked',on);
   $('sMemo').classList.toggle('on',on);memoI.tabIndex=on?0:-1;if(on)setTimeout(function(){memoI.focus({preventScroll:true})},260);});
+SM.querySelector('.memo-b').addEventListener('click',function(){memoI.focus()});
 var tip=$('sTip'),tm;
 tip.addEventListener('mouseenter',function(){clearTimeout(tm);tip.classList.add('open')});
 tip.addEventListener('mouseleave',function(){tm=setTimeout(function(){tip.classList.remove('open')},200)});
